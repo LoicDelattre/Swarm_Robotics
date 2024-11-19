@@ -31,7 +31,7 @@ def send_command(command):
 
 # Movement functions
 def move_forward(duration):
-    send_command('F')  # Forward movement command
+    send_command('F')  # Forward movement command NEEDS TROUBLESHOOTING
     time.sleep(duration)
     send_command('S')  # Stop after moving
 
