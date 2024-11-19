@@ -1,8 +1,25 @@
 import serial
 import time
 
+#Ports are not gonna be used for wireless communication
+
 # Initialize the serial connection (adjust port and baudrate as needed)
-mbot_serial = serial.Serial(port='/dev/ttyUSB0', baudrate=9600, timeout=1)
+mbot_serial = serial.Serial(port='COM0', baudrate=9600, timeout=1)
+
+def openSerialPort(arduino, comPort, baudRate):
+	print("--> COM Port = ", comPort)
+	print("--> Baud rate = ", baudRate)
+	arduino.baudrate = baudRate
+	arduino.port = comPort
+	try:
+		arduino.open()
+	except serial.SerialException as e:
+		print("[ERROR] ", e)
+		return	
+	
+	time.sleep(2) # give the connection 2s to settle (Arduino board resets)
+	
+openSerialPort(arduino,port,baudrate);
 
 # Helper function to send commands
 def send_command(command):
