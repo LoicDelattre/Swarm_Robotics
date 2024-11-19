@@ -8,16 +8,17 @@ product_id = 65535
 
 print("Opening device")
 	
-h = hid.Device(vendor_id, product_id)
+h = hid.device()
+h.open(vendor_id, product_id)
  
 try:
 	
-    print("Manufacturer: %s" %h.manufacturer)
-    print("Product: %s" %h.product)
-    print("Serial No: %s" %h.serial)
+    print("Manufacturer: %s" %h.get_manufacturer_string())
+    print("Product: %s" %h.get_product_string())
+    print("Serial No: %s" %h.get_serial_number_string())
 	
 	# enable non blocking mode
-    h.nonblocking = 1
+    h.set_nonblocking(1)
 	
 	# write some data
     print("Writing data")
