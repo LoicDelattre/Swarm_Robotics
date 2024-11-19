@@ -2,7 +2,7 @@ import serial
 import time
 
 # Initialize the serial connection (adjust the port and baudrate as needed)
-mbot_serial = serial.Serial(port='/dev/COM0', baudrate=9600, timeout=1)
+mbot_serial = serial.Serial(port='/dev/COM4', baudrate=9600, timeout=1)
 
 def openSerialPort(arduino, comPort, baudRate):
 	print("--> COM Port = ", comPort)
