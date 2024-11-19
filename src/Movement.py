@@ -2,7 +2,7 @@ import serial
 import time
 
 # Initialize the serial connection (adjust port and baudrate as needed)
-mbot_serial = serial.Serial(port='/dev/ttyUSB0', baudrate=115200, timeout=1)
+mbot_serial = serial.Serial(port='/dev/ttyUSB0', baudrate=9600, timeout=1)
 
 # Helper function to send commands
 def send_command(command):
