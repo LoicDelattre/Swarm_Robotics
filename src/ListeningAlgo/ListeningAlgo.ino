@@ -13,20 +13,20 @@ void loop() {
     
     switch(command) {
       case 'F':  // Move forward
-        motor1.run(255);  // Full speed forward for motor1
-        motor2.run(255);  // Full speed forward for motor2
+        motor1.run(-200);  // Full speed forward for motor1
+        motor2.run(200);  // Full speed forward for motor2
         break;
       case 'B':  // Move backward
-        motor1.run(-255);  // Full speed backward for motor1
-        motor2.run(-255);  // Full speed backward for motor2
+        motor1.run(200);  // Full speed backward for motor1
+        motor2.run(-200);  // Full speed backward for motor2
         break;
       case 'L':  // Turn left
-        motor1.run(-255);  // Reverse motor1 to turn left
+        motor1.run(0);  // Reverse motor1 to turn left
         motor2.run(255);   // Forward motor2 to turn left
         break;
       case 'R':  // Turn right
-        motor1.run(255);   // Forward motor1 to turn right
-        motor2.run(-255);  // Reverse motor2 to turn right
+        motor1.run(-255);   // Forward motor1 to turn right
+        motor2.run(0);  // Reverse motor2 to turn right
         break;
       case 'S':  // Stop
         motor1.run(0);  // Stop motor1

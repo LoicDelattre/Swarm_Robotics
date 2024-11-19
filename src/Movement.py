@@ -60,6 +60,9 @@ try:
 
     print("Turning right...")
     turn_right(1)  # Turn right for 1 second
+    
+    print("Going backwards...")
+    move_backwards(1) # Goes backwards for 1 seconds
 
     print("Sequence complete!")
 except KeyboardInterrupt:
