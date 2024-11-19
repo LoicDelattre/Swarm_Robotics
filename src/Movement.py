@@ -1,23 +1,25 @@
 import serial
 import time
 
+port= 'COM4'
+baudrate=9600
 # Initialize the serial connection (adjust the port and baudrate as needed)
-mbot_serial = serial.Serial(port='COM4', baudrate=9600, timeout=1)
+mbot_serial = serial.Serial(port= 'COM4' , baudrate=9600, timeout=1)
 
-def openSerialPort(arduino, comPort, baudRate):
-	print("--> COM Port = ", comPort)
-	print("--> Baud rate = ", baudRate)
-	arduino.baudrate = baudRate
-	arduino.port = comPort
+def openSerialPort(mbot_serial, port, baudRate):
+	print("--> COM Port = ", port)
+	print("--> Baud rate = ", baudrate)
+	mbot_serial.baudrate = baudrate
+	mbot_serial.port = port
 	try:
-		arduino.open()
+		mbot_serial.open()
 	except serial.SerialException as e:
 		print("[ERROR] ", e)
 		return	
 	
 	time.sleep(2) # give the connection 2s to settle (Arduino board resets)
 	
-openSerialPort(arduino,port,baudrate)
+openSerialPort(mbot_serial,port,baudrate)
 
 def send_command(command):
     """
