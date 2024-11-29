@@ -13,8 +13,8 @@ void loop() {
     
     switch(command) {
       case 'F':  // Move forward
-        motor1.run(255);  // Full speed forward for motor1  NEEDS TROUBLESHOOTING
-        motor2.run(0);  // Full speed forward for motor2
+        motor1.run(-200);  // Full speed forward for motor1  NEEDS TROUBLESHOOTING
+        motor2.run(200);  // Full speed forward for motor2
         break;
       case 'B':  // Move backward
         motor1.run(200);  // Full speed backward for motor1

@@ -1,10 +1,10 @@
 import serial
 import time
 
-port= 'COM4'
+port= 'COM5'
 baudrate=9600
 # Initialize the serial connection (adjust the port and baudrate as needed)
-mbot_serial = serial.Serial(port= 'COM4' , baudrate=9600, timeout=1)
+mbot_serial = serial.Serial(port= 'COM5' , baudrate=9600, timeout=1)
 
 def openSerialPort(mbot_serial, port, baudRate):
 	print("--> COM Port = ", port)
@@ -52,18 +52,19 @@ def move_backwards(duration):
 
 # Main sequence
 try:
+    time.sleep(3)
     print("Moving forward...")
     move_forward(1)  # Move forward for 2 seconds
-
+    
     print("Turning left...")
     turn_left(1)  # Turn left for 1 second
-
+    
     print("Turning right...")
     turn_right(1)  # Turn right for 1 second
     
     print("Going backwards...")
     move_backwards(1) # Goes backwards for 1 seconds
-
+    
     print("Sequence complete!")
 except KeyboardInterrupt:
     print("Program interrupted.")
