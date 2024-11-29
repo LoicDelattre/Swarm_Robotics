@@ -6,4 +6,4 @@ for device_dict in hid.enumerate():
 	for key in keys:
 		print("%s : %s" % (key, device_dict[key]))
 	print()
-	
+
