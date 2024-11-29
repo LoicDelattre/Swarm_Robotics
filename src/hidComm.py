@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
+#pip install hidapi
+#pip install hidapi-tools
+
 import hid
 import time
 
-vendor_id = 1046
-product_id = 65535
+vendor_id = 0x416 #1046
+product_id = 0xFFFF #65535
 
 print("Opening device")
 	
