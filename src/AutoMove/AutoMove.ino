@@ -12,7 +12,7 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   delay(3000);
-  //(Serial.println("Skibidiing forward"); motor1.run(-200); motor2.run(200); delay(1000);  motor1.run(0);  motor2.run(0); delay(2000);)
+  (Serial.println("Skibidiing forward"); motor1.run(-200); motor2.run(200); delay(1000);  motor1.run(0);  motor2.run(0); delay(2000);
 
   Serial.println("Skibidiing left");
   motor1.run(100);
@@ -30,5 +30,5 @@ void loop() {
   motor2.run(0);
   delay(2000);
 
-  //Serial.println("Skibidiing Backward");motor1.run(100);motor2.run(-100);delay(1000);motor1.run(0);motor2.run(0);delay(2000);
+  Serial.println("Skibidiing Backward");motor1.run(100);motor2.run(-100);delay(1000);motor1.run(0);motor2.run(0);delay(2000);
 }
