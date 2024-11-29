@@ -31,6 +31,7 @@ def send_command(command):
 
 # Movement functions
 def move_forward(duration):
+    
     send_command('F')  # Forward movement command NEEDS TROUBLESHOOTING
     time.sleep(duration)
     send_command('S')  # Stop after moving
@@ -54,16 +55,16 @@ def move_backwards(duration):
 try:
     time.sleep(3)
     print("Moving forward...")
-    move_forward(1)  # Move forward for 2 seconds
+    #move_forward(1)  # Move forward for 2 seconds
     
     print("Turning left...")
     turn_left(1)  # Turn left for 1 second
     
     print("Turning right...")
-    turn_right(1)  # Turn right for 1 second
+    #turn_right(1)  # Turn right for 1 second
     
     print("Going backwards...")
-    move_backwards(1) # Goes backwards for 1 seconds
+    #move_backwards(1) # Goes backwards for 1 seconds
     
     print("Sequence complete!")
 except KeyboardInterrupt:
