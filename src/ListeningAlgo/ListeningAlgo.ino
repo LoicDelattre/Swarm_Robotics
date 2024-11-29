@@ -22,10 +22,10 @@ void loop() {
         break;
       case 'L':  // Turn left
         motor1.run(0);  // Reverse motor1 to turn left
-        motor2.run(255);   // Forward motor2 to turn left
+        motor2.run(200);   // Forward motor2 to turn left
         break;
       case 'R':  // Turn right
-        motor1.run(-255);   // Forward motor1 to turn right
+        motor1.run(-200);   // Forward motor1 to turn right
         motor2.run(0);  // Reverse motor2 to turn right
         break;
       case 'S':  // Stop
