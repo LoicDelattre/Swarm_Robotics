@@ -21,12 +21,12 @@ void loop() {
         motor2.run(-200);  // Full speed backward for motor2
         break;
       case 'L':  // Turn left
-        motor1.run(75);  // Reverse motor1 to turn left
-        motor2.run(75);   // Forward motor2 to turn left
+        motor1.run(80);  // Reverse motor1 to turn left
+        motor2.run(80);   // Forward motor2 to turn left
         break;
       case 'R':  // Turn right
-        motor1.run(-200);   // Forward motor1 to turn right
-        motor2.run(-200);  // Reverse motor2 to turn right
+        motor1.run(-80);   // Forward motor1 to turn right
+        motor2.run(-80);  // Reverse motor2 to turn right
         break;
       case 'S':  // Stop
         motor1.run(0);  // Stop motor1
