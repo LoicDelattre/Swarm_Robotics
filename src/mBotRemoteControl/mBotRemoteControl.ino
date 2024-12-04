@@ -26,6 +26,15 @@ int _rightMotorSpeed = 0;
 int _leftMotorDirection = 0;
 int _rightMotorDirection = 0;
 
+int baseSpeed = 180;
+float turnRatio = 0.6;
+float movingThreshold = 0.01;
+
+  //move flags for nextx instructions
+  bool xMoveFlag = false;
+  bool yMoveFlag = false;
+  bool moveFlag = false;
+  bool forwardFlag = false;
 
 char buffer[52];
 char serialRead;
@@ -36,6 +45,15 @@ byte index = 0;
 byte dataLen;
 uint8_t command_index = 0;
 
+int getSign(float value) {
+  if (value > 0) {
+    return 1;  // Positive
+  } else if (value < 0) {
+    return -1; // Negative
+  } else {
+    return 0;  // Zero
+  }
+}
 
 void move(int leftMotorSpeed, int rightMotorSpeed) //, int duration)
 {
@@ -145,18 +163,23 @@ void parseData()
   if (xCurrentSign == 1) xCurrentPosition *=-1;
   if (yCurrentSign == 1) yCurrentPosition *=-1;
   if (xTargetSign == 1) xTargetPosition *=-1;
-  if (yTargetSign == 1) yTargetPosition *=-1;
+  if (yTargetSign == 1) yTargetPosition *=-1; 
   if (currentAngleSign == 1) currentAngle *=-1;
 
-  //yTargetPosition *=-1;
+  bool stopFlag = false;
+  if (yTargetSign == 0) stopFlag = true;
 
   // determines the target vector coordinates
   float uTargetVector = xTargetPosition - xCurrentPosition;
   float vTargetVector = yTargetPosition - yCurrentPosition;
 
   // specifies the reference vector coordinates
-  float uReferenceVector = 1.0f;
-  float vReferenceVector = 0.0f;
+  //float uReferenceVector = 0.0;
+  //float vReferenceVector = 1.0*getSign(vTargetVector);
+
+  float val = 1.0f;
+  float uReferenceVector = 0.0f;
+  float vReferenceVector = val;
 
   // determines the target angle
   float targetAngle = getVectorAngle(uReferenceVector, vReferenceVector, uTargetVector, vTargetVector);
@@ -169,7 +192,7 @@ void parseData()
   //subtract the current angle
   targetAngle -= currentAngle;
 
-  spinToAngle(targetAngle);
+  //spinToAngle(targetAngle);
 
   int angleToSend = 0;
   if (targetAngle < 0)
@@ -189,21 +212,42 @@ void parseData()
     writeSerial(targetAngleSign);
     writeSerial(angleToSend);
   writeEnd();  
-
- 
-  /*_leftMotorDirection = readBuffer(4);
-  _leftMotorSpeed = readBuffer(5);
-  _rightMotorDirection = readBuffer(6);
-  _rightMotorSpeed = readBuffer(7);
-
-  if (_leftMotorDirection == 0)
-    _leftMotorSpeed *=-1;
-
-  if (_rightMotorDirection == 0)
-    _rightMotorSpeed *=-1;
-    
-  move(_leftMotorSpeed, _rightMotorSpeed);
   
+  if (abs(uTargetVector) > movingThreshold)
+  {
+    xMoveFlag = true;
+  }
+  if (abs(vTargetVector) > movingThreshold){
+    yMoveFlag = true;
+  }
+  if (xMoveFlag and yMoveFlag){
+    moveFlag = true;
+  }
+
+  //move purely forward or backwards directions
+  if (vTargetVector > 0){
+    _leftMotorDirection = 1;
+    _rightMotorDirection = 1;
+    forwardFlag = true;
+  }
+  else{
+    _leftMotorDirection = -1;
+    _rightMotorDirection = -1;
+    forwardFlag = false;
+  }
+
+  //only apply speed if we have a diff postion from cur positon
+  if (yMoveFlag){
+    _leftMotorSpeed = baseSpeed*_leftMotorDirection;
+    _rightMotorSpeed = baseSpeed*_rightMotorDirection;
+  }
+  if (stopFlag){
+    _leftMotorSpeed = 0;
+    _rightMotorSpeed = 0;
+  }
+
+  move(_leftMotorSpeed, _rightMotorSpeed);
+  /*
   writeHead();
   writeSerial(idx);
   writeSerial(_leftMotorSpeed);
