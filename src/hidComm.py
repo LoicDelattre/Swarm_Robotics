@@ -13,11 +13,15 @@ class HIDComm():
     def __init__(self) -> None:
         self.vendor_id = 0x416 #1046
         self.product_id = 0xFFFF #65535
-        self.botsNumber = 1#number of bots controlled
+        
+        device_list = hid.enumerate(self.vendor_id, self.product_id)
+        self.botsNumber = len(device_list)#number of bots controlled
+        print(device_list)
 
         self.devices = []
         for i in range(0, self.botsNumber):
-            self.devices.append(self.openHidDevice())
+            path = device_list[i]["path"]
+            self.devices.append(self.openHidDevice(path))
 
         self.baseSleepTime = 2
 
@@ -36,10 +40,11 @@ class HIDComm():
         self.runFlag = True
         pass
 
-    def openHidDevice(self):
+    def openHidDevice(self, path):
         print("Opening device")
         h = hid.device()
-        h.open(self.vendor_id, self.product_id)
+        h.open_path(path)
+        #h.open(self.vendor_id, self.product_id)
         h.set_nonblocking(1)
         return h
 
