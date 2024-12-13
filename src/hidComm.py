@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 #sudo pip install hidapi 1.0.4
-#sudo pip install hidapi-tools 
+#sudo apt install libusb-1.0-0-dev libudev-dev
 
 import hid
 import time
