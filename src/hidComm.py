@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-#pip install hidapi 1.0.4
-#pip install hidapi-tools
+#sudo pip install hidapi 1.0.4
+#sudo pip install hidapi-tools 
 
 import hid
 import time
