@@ -6,8 +6,8 @@
 import hid
 import time
 
-vendor_id = 0x416 #1046
-product_id = 0xFFFF #65535
+vendor_id = 0x80EE #33006
+product_id = 0x21 #33
 
 print("Opening device")
 	

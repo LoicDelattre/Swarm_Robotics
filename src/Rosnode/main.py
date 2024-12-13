@@ -7,7 +7,7 @@ import hid
 
 # Initialize HID device
 device = hid.device()
-device.open(0x1234, 0x5678)  # HID device's ID
+device.open(0x80EE, 0x21)  # HID device's ID
 
 def cmd_vel_callback(msg):
     # Define predefined hexadecimal values for actions
