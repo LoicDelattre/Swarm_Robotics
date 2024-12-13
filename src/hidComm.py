@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 #sudo pip install hidapi 1.0.4
-#sudo pip install hidapi-tools 
+#sudo apt install libusb-1.0-0-dev libudev-dev
+#in VM, make sure to add USB in filters and add product id and vendor id after adding
+#by default, yuou can try the values given here 
 
 import hid
 import time
@@ -11,8 +13,15 @@ class HIDComm():
     def __init__(self) -> None:
         self.vendor_id = 0x416 #1046
         self.product_id = 0xFFFF #65535
+        
+        device_list = hid.enumerate(self.vendor_id, self.product_id)
+        self.botsNumber = len(device_list)#number of bots controlled
+        print(device_list)
 
-        self.h = self.openHidDevice()
+        self.devices = []
+        for i in range(0, self.botsNumber):
+            path = device_list[i]["path"]
+            self.devices.append(self.openHidDevice(path))
 
         self.baseSleepTime = 2
 
@@ -31,10 +40,11 @@ class HIDComm():
         self.runFlag = True
         pass
 
-    def openHidDevice(self):
+    def openHidDevice(self, path):
         print("Opening device")
         h = hid.device()
-        h.open(self.vendor_id, self.product_id)
+        h.open_path(path)
+        #h.open(self.vendor_id, self.product_id)
         h.set_nonblocking(1)
         return h
 
@@ -43,7 +53,9 @@ class HIDComm():
                      xTargetSign, xTargetPos, yTargetSign, yTargetPos, self.cur_ang_sign, self.cur_ang] + [0x00]*14)
         print("Writing data")
         print(byte_str)
-        self.h.write(byte_str)
+
+        for device in self.devices:
+            device.write(byte_str)
 	
         self.x_cur_sign = xTargetSign
         self.x_cur_pos = xTargetPos
@@ -58,7 +70,7 @@ class HIDComm():
         # read back some data 
         print("Reading data")   
         while True:
-            d = self.h.read(64)
+            d = self.h.read(64) #depreciated
             if d:
                 print(d)
             else:
@@ -69,7 +81,8 @@ class HIDComm():
 	
     def closeDevice(self):
         print("Closing the device")
-        self.h.close()
+        for device in self.devices:
+            device.close()
         pass
 
     def moveForward(self):
