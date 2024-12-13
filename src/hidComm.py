@@ -2,6 +2,8 @@
 
 #sudo pip install hidapi 1.0.4
 #sudo apt install libusb-1.0-0-dev libudev-dev
+#in VM, make sure to add USB in filters and add product id and vendor id after adding
+#by default, yuou can try the values given here 
 
 import hid
 import time
@@ -11,8 +13,11 @@ class HIDComm():
     def __init__(self) -> None:
         self.vendor_id = 0x416 #1046
         self.product_id = 0xFFFF #65535
+        self.botsNumber = 1#number of bots controlled
 
-        self.h = self.openHidDevice()
+        self.devices = []
+        for i in range(0, self.botsNumber):
+            self.devices.append(self.openHidDevice())
 
         self.baseSleepTime = 2
 
@@ -43,7 +48,9 @@ class HIDComm():
                      xTargetSign, xTargetPos, yTargetSign, yTargetPos, self.cur_ang_sign, self.cur_ang] + [0x00]*14)
         print("Writing data")
         print(byte_str)
-        self.h.write(byte_str)
+
+        for device in self.devices:
+            device.write(byte_str)
 	
         self.x_cur_sign = xTargetSign
         self.x_cur_pos = xTargetPos
@@ -58,7 +65,7 @@ class HIDComm():
         # read back some data 
         print("Reading data")   
         while True:
-            d = self.h.read(64)
+            d = self.h.read(64) #depreciated
             if d:
                 print(d)
             else:
@@ -69,7 +76,8 @@ class HIDComm():
 	
     def closeDevice(self):
         print("Closing the device")
-        self.h.close()
+        for device in self.devices:
+            device.close()
         pass
 
     def moveForward(self):
