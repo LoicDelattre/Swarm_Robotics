@@ -4,42 +4,25 @@ import hid
 
 #!/usr/bin/env python
 
+if __name__ == '__main__':
+    rospy.init_node('GyattBot')
 
-# Initialize HID device
-device = hid.device()
-device.open(0x1234, 0x5678)  # HID device's ID
+    rospy.loginfo("GyattBot node started ©")
+    rospy.loginfo("Kaaris 2024")
 
-def cmd_vel_callback(msg):
-    # Define predefined hexadecimal values for actions
-    forward = [0x00, 0x01, 0x00, 0x00]
-    backward = [0x00, 0xFF, 0x00, 0x00]
-    left = [0x00, 0x00, 0x01, 0x00]
-    right = [0x00, 0x00, 0xFF, 0x00]
+    def cmd_vel_callback(msg):
+        
+        # Send data via HID
+        try:
+            ######################Loic met le code ici######################
+            h = hid.device()
+            h.open(0x1234, 0x5678)  # VendorID/ProductID
+            h.write(hex_data)
+            h.close()
+        except Exception as e:
+            rospy.logerr(f"Failed to send data via HID: {e}")
 
-    # Determine action based on Twist message
-    if msg.linear.x > 0:
-        report = forward
-    elif msg.linear.x < 0:
-        report = backward
-    elif msg.angular.z > 0:
-        report = left
-    elif msg.angular.z < 0:
-        report = right
-    else:
-        report = [0x00, 0x00, 0x00, 0x00]  # Stop
-
-    # Send HID report
-    device.write(report)
-
-def main():
-    rospy.init_node('cmd_vel_subscriber', anonymous=True)
     rospy.Subscriber('cmd_vel', Twist, cmd_vel_callback)
     rospy.spin()
 
-if __name__ == '__main__':
-    try:
-        main()
-    except rospy.ROSInterruptException:
-        pass
-    finally:
-        device.close()
+
