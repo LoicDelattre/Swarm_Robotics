@@ -16,7 +16,7 @@ class HIDComm():
 
         self.baseSleepTime = 2
 
-        #initializa all variables
+        #initializa all variablesszszse
         self.x_cur_pos = 0x00
         self.y_cur_pos = 0x00
         self.x_cur_sign = 0x00
