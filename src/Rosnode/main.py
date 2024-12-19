@@ -146,17 +146,17 @@ if __name__ == '__main__':
 
     def cmd_vel_callback(msg): 
         try:
-            if twist_msg.linear.x == 1:
+            if msg.linear.x == 1:
                 commREF.moveForward
-            if twist_msg.linear.z == -1:
+            if msg.angular.z == -1:
                 commREF.turnLeft
-            if twist_msg.linear.z == 1:
+            if msg.angular.z == 1:
                 commREF.turnRight
-            if twist_msg.linear.x == 0 & twist_msg.linear.z == 0:
+            if msg.linear.x == 0 & msg.angular.z == 0:
                 commREF.stopMoving
-            if twist_msg.linear.x == -1:
+            if msg.linear.x == -1:
                 commREF.moveBackward
-            if twist_msg.angular.y == 1:
+            if msg.linear.y == 1:
                 commREF.stopMoving
                 commREF.closeDevice
                 runFlag = False
