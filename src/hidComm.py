@@ -37,11 +37,14 @@ class HIDComm():
         self.cur_ang_sign = 0x00
         self.cur_ang = 0x00
 
+        self.y_sign = 0x00 #makes stop
+        self.y_tar_pos = 0x00
+
         self.runFlag = True
         pass
 
     def openHidDevice(self, path):
-        print("Opening device")
+        print("'Opening device' - Kaaris 2024")
         h = hid.device()
         h.open_path(path)
         #h.open(self.vendor_id, self.product_id)
@@ -68,7 +71,7 @@ class HIDComm():
 
     def readData(self):
         # read back some data 
-        print("Reading data")   
+        print("'Reading data'")   
         while True:
             d = self.h.read(64) #depreciated
             if d:
@@ -88,33 +91,51 @@ class HIDComm():
     def moveForward(self):
         x_sign = 0x00
         x_tar_pos = 0x00
-        y_sign = 0xff
-        y_tar_pos = 0xff
-        self.writeData(x_sign, x_tar_pos, y_sign, y_tar_pos)
+        self.y_sign = 0xff
+        self.y_tar_pos = 0xff
+        self.writeData(x_sign, x_tar_pos, self.y_sign, self.y_tar_pos)
         print("skibidding forward")
         pass
 
     def moveBackward(self):
         x_sign = 0x00
         x_tar_pos = 0x00
-        y_sign = 0x01
-        y_tar_pos = 0xff
-        self.writeData(x_sign, x_tar_pos, y_sign, y_tar_pos)
+        self.y_sign = 0x01
+        self.y_tar_pos = 0xff
+        self.writeData(x_sign, x_tar_pos, self.y_sign, self.y_tar_pos)
         print("skibidding backward")
         pass
 
     def stopMoving(self):
         x_sign = 0x00
         x_tar_pos = 0x00
-        y_sign = 0x00 #makes stop
-        y_tar_pos = 0x00
-        self.writeData(x_sign, x_tar_pos, y_sign, y_tar_pos)
+        self.y_sign = 0x00 #makes stop
+        self.y_tar_pos = 0x00
+        self.writeData(x_sign, x_tar_pos, self.y_sign, self.y_tar_pos)
         print("stop skibidding")
+        pass
+
+    def turnLeft(self):
+        x_sign = 0x01
+        x_tar_pos = 0x10
+        self.writeData(x_sign, x_tar_pos, self.y_sign, self.y_tar_pos)
+        print("skibidding left")
+        pass
+
+    def turnRight(self):
+        x_sign = 0x10
+        x_tar_pos = 0x10
+        self.writeData(x_sign, x_tar_pos, self.y_sign, self.y_tar_pos)
+        print("skibidding left")
         pass
 
     def checkKeys(self):
         if keys.is_pressed('z'):
             self.moveForward()
+        if keys.is_pressed("q"):
+            self.turnLeft()
+        if keys.is_pressed("d"):
+            self.turnRight()
         if keys.is_pressed("e"):
             self.stopMoving()
         if keys.is_pressed("s"):
