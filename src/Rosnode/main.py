@@ -132,23 +132,6 @@ if __name__ == '__main__':
             print("skibidding left")
             pass
 
-        def checkKeys(self):
-            if self.twist_msg.linear.x == 1:
-                self.moveForward()
-            if self.twist_msg.linear.z == -1:
-                self.turnLeft()
-            if self.twist_msg.linear.z == 1:
-                self.turnRight()
-            if self.twist_msg.linear.x == 0 & self.twist_msg.linear.z == 0:
-                self.stopMoving()
-            if self.twist_msg.linear.x == -1:
-                self.moveBackward()
-            if self.twist_msg.angular.y == 1:
-                self.stopMoving()
-                self.closeDevice()
-                self.runFlag = False
-            pass
-
         def mainTask(self):
             while self.runFlag:
                 self.checkKeys()
@@ -159,9 +142,25 @@ if __name__ == '__main__':
             print("Done")
             pass
 
+    commREF = HIDComm()
+
     def cmd_vel_callback(msg): 
         try:
-            HIDComm().mainTask()
+            if twist_msg.linear.x == 1:
+                commREF.moveForward
+            if twist_msg.linear.z == -1:
+                commREF.turnLeft
+            if twist_msg.linear.z == 1:
+                commREF.turnRight
+            if twist_msg.linear.x == 0 & twist_msg.linear.z == 0:
+                commREF.stopMoving
+            if twist_msg.linear.x == -1:
+                commREF.moveBackward
+            if twist_msg.angular.y == 1:
+                commREF.stopMoving
+                commREF.closeDevice
+                runFlag = False
+            pass
 
         except Exception as e:
             rospy.logerr(f"Failed to send data via HID: {e}")
