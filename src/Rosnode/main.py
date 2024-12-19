@@ -153,7 +153,7 @@ if __name__ == '__main__':
                 commREF.turnLeft()
             if msg.angular.z == 1:
                 commREF.turnRight()
-            if msg.linear.x == 0 & msg.angular.z == 0:
+            if msg.linear.x == 0 and msg.angular.z == 0:
                 commREF.stopMoving()
             if msg.linear.x == -1:
                 commREF.moveBackward()
