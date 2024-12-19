@@ -8,7 +8,8 @@ key_mapping = {
     's': (-1, 0), # Move backward
     'q': (0, 1),  # Turn left
     'd': (0, -1), # Turn right
-    'x': (0, 0)   # Stop
+    'x': (0, 0),  # Stop
+    'p': (0, 0)   # Stop everything and set linear.y to 0
 }
 
 def get_key():
@@ -27,9 +28,8 @@ def main():
     global settings
     settings = termios.tcgetattr(sys.stdin)
 
-    print("Use 'WASD' keys to control the robot:")
-    print("  Z: Forward\n  S: Backward\n  Q: Turn Left\n  D: Turn Right\n  X: Stop")
-    
+    print("Use 'ZSQD' keys to control the robot:")
+    print("  Z: Forward\n  S: Backward\n  Q: Turn Left\n  D: Turn Right\n  X: Stop\n  P: Stop Everything")
 
     rate = rospy.Rate(10) # 10 Hz
     twist = Twist()
@@ -42,6 +42,11 @@ def main():
                 linear, angular = key_mapping[key]
                 twist.linear.x = linear
                 twist.angular.z = angular
+
+                if key == 'p':
+                    twist.linear.y = 1  # Stop everything and set linear.y to 1
+                    twist.linear.x = 0
+                    twist.angular.z = 0
             else:
                 print("Unknown key: {}, stopping robot.".format(key))
                 twist.linear.x = 0
@@ -54,6 +59,7 @@ def main():
     finally:
         twist.linear.x = 0
         twist.angular.z = 0
+        twist.linear.y = 0  # Ensure linear.y is also stopped
         pub.publish(twist)
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
 

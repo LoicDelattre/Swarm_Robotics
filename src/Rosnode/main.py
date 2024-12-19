@@ -52,6 +52,7 @@ if __name__ == '__main__':
             h.open_path(path)
             #h.open(self.vendor_id, self.product_id)
             h.set_nonblocking(1)
+            print("Device opened")
             return h
 
         def writeData(self, xTargetSign, xTargetPos, yTargetSign, yTargetPos):
@@ -147,18 +148,18 @@ if __name__ == '__main__':
     def cmd_vel_callback(msg): 
         try:
             if msg.linear.x == 1:
-                commREF.moveForward
+                commREF.moveForward()
             if msg.angular.z == -1:
-                commREF.turnLeft
+                commREF.turnLeft()
             if msg.angular.z == 1:
-                commREF.turnRight
-            if msg.linear.x == 0 & msg.angular.z == 0:
-                commREF.stopMoving
+                commREF.turnRight()
+            if msg.linear.x == 0 and msg.angular.z == 0:
+                commREF.stopMoving()
             if msg.linear.x == -1:
-                commREF.moveBackward
+                commREF.moveBackward()
             if msg.linear.y == 1:
-                commREF.stopMoving
-                commREF.closeDevice
+                commREF.stopMoving()
+                commREF.closeDevice()
                 runFlag = False
             pass
 
