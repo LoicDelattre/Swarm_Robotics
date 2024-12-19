@@ -13,7 +13,7 @@ MeDCMotor _rightMotor(10);
 
 // declare gyro
 MeGyro _gyro;
-double _Kp_angle = -5.0;
+double _Kp_angle = -2;
 
 // robot characteristics
 double _wheelDiameter = 6.0; //cm
@@ -22,15 +22,18 @@ double _distanceBetweenWheels = 11.5; //cm
 // declare motor speeds
 int _leftMotorSpeed = 0;
 int _rightMotorSpeed = 0;
+float _direction = 0;
 
 int _leftMotorDirection = 0;
 int _rightMotorDirection = 0;
 
 int baseSpeed = 180;
+int currentSpeedY = 0;
 float baseTurnRatio = 0.05;
 float currentTurnRatio = 0; //positive is right when going forward ie left when backwards)
 
 float movingThreshold = 0.01;
+float angleThreshold = 1.2;
 
   //move flags for nextx instructions
   bool xMoveFlag = false;
@@ -146,6 +149,48 @@ float getVectorAngleSign(float u1, float v1, float u2, float v2)
   return angleSign;
 }
 
+void controlAngle()
+{
+  _gyro.update();
+  float thetaBaseline = _gyro.getAngleZ();
+  float angleDiff = _direction - thetaBaseline;
+  int targetSignRotation = getSign(angleDiff);
+  Serial.println(angleDiff);
+
+  if (abs(angleDiff) > angleThreshold){
+    int drivingDirection = 0;
+    double w = _Kp_angle * angleDiff;
+    double leftWheelSpeed  =  _distanceBetweenWheels * w / (_wheelDiameter) ;
+    double rightWheelSpeed = - _distanceBetweenWheels * w / (_wheelDiameter) ;
+    
+    //motor speed change
+    if (forwardFlag){
+      drivingDirection = 1;
+    }
+    else{
+      drivingDirection = -1;
+    }
+     _leftMotorSpeed += leftWheelSpeed;//*drivingDirection;
+     _rightMotorSpeed += rightWheelSpeed;//*drivingDirection;
+
+     //truncate
+    if (_leftMotorSpeed > baseSpeed)
+        _leftMotorSpeed = baseSpeed;
+    if (_leftMotorSpeed < -baseSpeed)
+        _leftMotorSpeed = -baseSpeed;
+        
+    if (_rightMotorSpeed > baseSpeed)
+        _rightMotorSpeed = baseSpeed;
+    if (_rightMotorSpeed < -baseSpeed)
+        _rightMotorSpeed = -baseSpeed;
+  }
+  else
+  {
+    _leftMotorSpeed = currentSpeedY;
+    _rightMotorSpeed = currentSpeedY;
+  }
+}
+
 void parseData()
 {
   isStart = false;
@@ -242,6 +287,7 @@ void parseData()
   if (yMoveFlag){
     _leftMotorSpeed = baseSpeed*_leftMotorDirection;
     _rightMotorSpeed = baseSpeed*_rightMotorDirection;
+    currentSpeedY = baseSpeed*_leftMotorDirection;
   }
   if (xMoveFlag){
     int targetSignRotation = 1;
@@ -258,10 +304,9 @@ void parseData()
   if (stopFlag){
     _leftMotorSpeed = 0;
     _rightMotorSpeed = 0;
+    currentSpeedY = 0;
   }
 
-
-  move(_leftMotorSpeed, _rightMotorSpeed);
   /*
   writeHead();
   writeSerial(idx);
@@ -383,6 +428,7 @@ void setup()
   delay(5);
   Stop();
   Serial.begin(115200);
+  Serial.println("Starting");
   //Serial.print(index);
 
   // initialize the gyro
@@ -405,5 +451,7 @@ void loop()
   while(1)
   {
     serialHandle();
+    controlAngle();
+    move(_leftMotorSpeed, _rightMotorSpeed);
   }
 }
