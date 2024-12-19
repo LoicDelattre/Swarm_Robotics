@@ -27,7 +27,9 @@ int _leftMotorDirection = 0;
 int _rightMotorDirection = 0;
 
 int baseSpeed = 180;
-float turnRatio = 0.6;
+float baseTurnRatio = 0.05;
+float currentTurnRatio = 0; //positive is right when going forward ie left when backwards)
+
 float movingThreshold = 0.01;
 
   //move flags for nextx instructions
@@ -241,10 +243,23 @@ void parseData()
     _leftMotorSpeed = baseSpeed*_leftMotorDirection;
     _rightMotorSpeed = baseSpeed*_rightMotorDirection;
   }
+  if (xMoveFlag){
+    int targetSignRotation = 1;
+    if (xTargetSign == 1) targetSignRotation =-1;
+    if (forwardFlag){
+        updateTurnRatio(targetSignRotation);
+    }
+    else{
+        updateTurnRatio(-targetSignRotation);
+    }
+    _leftMotorSpeed *= (1+currentTurnRatio);
+    _rightMotorSpeed *= (1-currentTurnRatio);
+  }
   if (stopFlag){
     _leftMotorSpeed = 0;
     _rightMotorSpeed = 0;
   }
+
 
   move(_leftMotorSpeed, _rightMotorSpeed);
   /*
@@ -254,6 +269,17 @@ void parseData()
   writeSerial(_rightMotorSpeed);
   writeEnd();  
   */
+}
+
+void updateTurnRatio(int direction){
+  if (direction == 1) //negative means left rotation
+  {
+    currentTurnRatio -= baseTurnRatio;
+  }  
+
+  else{//right rotation
+      currentTurnRatio += baseTurnRatio;
+    }
 }
 
 void writeBuffer(int16_t index, unsigned char c)
