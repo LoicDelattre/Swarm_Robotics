@@ -33,13 +33,14 @@ float baseTurnRatio = 0.05;
 float currentTurnRatio = 0; //positive is right when going forward ie left when backwards)
 
 float movingThreshold = 0.01;
-float angleThreshold = 1.2;
+float angleThreshold = 2;
 
   //move flags for nextx instructions
   bool xMoveFlag = false;
   bool yMoveFlag = false;
   bool moveFlag = false;
   bool forwardFlag = false;
+  bool turningFlag = false;
 
 char buffer[52];
 char serialRead;
@@ -194,6 +195,8 @@ void controlAngle()
 void parseData()
 {
   isStart = false;
+  xMoveFlag = false;
+  yMoveFlag = false;
 
   // gets the command index
   int idx = readBuffer(3);
@@ -288,10 +291,19 @@ void parseData()
     _leftMotorSpeed = baseSpeed*_leftMotorDirection;
     _rightMotorSpeed = baseSpeed*_rightMotorDirection;
     currentSpeedY = baseSpeed*_leftMotorDirection;
+    currentTurnRatio = 0;
   }
   if (xMoveFlag){
     int targetSignRotation = 1;
     if (xTargetSign == 1) targetSignRotation =-1;
+    _direction += 10*targetSignRotation;
+    if (_direction > 180){
+      _direction = 180;
+    }
+    if (_direction < -180){
+      _direction = 180;
+    }
+    /*
     if (forwardFlag){
         updateTurnRatio(targetSignRotation);
     }
@@ -299,7 +311,7 @@ void parseData()
         updateTurnRatio(-targetSignRotation);
     }
     _leftMotorSpeed *= (1+currentTurnRatio);
-    _rightMotorSpeed *= (1-currentTurnRatio);
+    _rightMotorSpeed *= (1-currentTurnRatio);*/
   }
   if (stopFlag){
     _leftMotorSpeed = 0;
@@ -316,8 +328,8 @@ void parseData()
   */
 }
 
-void updateTurnRatio(int direction){
-  if (direction == 1) //negative means left rotation
+void updateTurnRatio(int direction_){
+  if (direction_ == 1) //negative means left rotation
   {
     currentTurnRatio -= baseTurnRatio;
   }  
@@ -442,7 +454,6 @@ void setup()
 
 
 }
-
 
 void loop()
 {
