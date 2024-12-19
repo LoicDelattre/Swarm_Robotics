@@ -52,6 +52,7 @@ if __name__ == '__main__':
             h.open_path(path)
             #h.open(self.vendor_id, self.product_id)
             h.set_nonblocking(1)
+            print("Device opened")
             return h
 
         def writeData(self, xTargetSign, xTargetPos, yTargetSign, yTargetPos):
